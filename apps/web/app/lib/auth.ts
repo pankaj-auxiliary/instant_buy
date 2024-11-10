@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@repo/db";
 import GoogleProvider from "next-auth/providers/google";
+
 const db = new PrismaClient();
 export const authOptions = {
   providers: [
