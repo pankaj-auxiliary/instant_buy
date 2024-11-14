@@ -1,20 +1,24 @@
+import React from "react";
 import { Plus } from "lucide-react";
 
 interface ProductCardProps {
+  id: number;
   name: string;
   price: number;
   weight: string;
   image: string;
   discount?: number;
+  onAddToCart: () => void;
 }
 
-export const ProductCard = ({
+export default function ProductCard({
   name,
   price,
   weight,
   image,
   discount,
-}: ProductCardProps) => {
+  onAddToCart,
+}: ProductCardProps) {
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
       <div className="relative">
@@ -41,11 +45,14 @@ export const ProductCard = ({
               </span>
             )}
           </div>
-          <button className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors">
+          <button
+            onClick={onAddToCart}
+            className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors"
+          >
             <Plus size={20} />
           </button>
         </div>
       </div>
     </div>
   );
-};
+}

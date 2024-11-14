@@ -1,30 +1,21 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-});
+import { AppProvider } from "../context/AppContext";
 
 export const metadata: Metadata = {
-  title: "Instant Buy",
-  description: "Instantly buy your daily need items",
+  title: "Blinkit Clone",
+  description: "Get your daily needs delivered in minutes",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <body>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
