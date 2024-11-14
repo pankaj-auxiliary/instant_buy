@@ -1,11 +1,26 @@
-import { Search, ShoppingCart, MapPin, ChevronDown, Menu } from "lucide-react";
+import React from "react";
+import {
+  Search,
+  ShoppingCart,
+  MapPin,
+  ChevronDown,
+  Menu,
+  User,
+} from "lucide-react";
 
 interface NavbarProps {
-  onMenuClick: () => void;
-  onCartClick: () => void;
+  onMenuClick?: () => void;
+  onCartClick?: () => void;
+  onLoginClick?: () => void;
+  isLoggedIn?: boolean;
 }
 
-export default function Navbar({ onMenuClick, onCartClick }: NavbarProps) {
+export default function Navbar({
+  onMenuClick,
+  onCartClick,
+  onLoginClick,
+  isLoggedIn,
+}: NavbarProps) {
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +58,16 @@ export default function Navbar({ onMenuClick, onCartClick }: NavbarProps) {
             </div>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            {!isLoggedIn && (
+              <button
+                onClick={onLoginClick}
+                className="flex items-center px-4 py-2 rounded-lg hover:bg-gray-100"
+              >
+                <User size={20} className="text-gray-600 mr-2" />
+                <span className="font-medium">Login</span>
+              </button>
+            )}
             <button
               onClick={onCartClick}
               className="flex items-center px-4 py-2 rounded-lg hover:bg-gray-100"

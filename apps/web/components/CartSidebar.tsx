@@ -14,14 +14,16 @@ interface CartSidebarProps {
   onClose: () => void;
   items: CartItem[];
   onUpdateQuantity: (id: number, quantity: number) => void;
+  onCheckout: () => void;
 }
 
-export const CartSidebar = ({
+export default function CartSidebar({
   isOpen,
   onClose,
   items,
   onUpdateQuantity,
-}: CartSidebarProps) => {
+  onCheckout,
+}: CartSidebarProps) {
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -136,7 +138,10 @@ export const CartSidebar = ({
               </div>
             </div>
 
-            <button className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center space-x-2">
+            <button
+              onClick={onCheckout}
+              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center space-x-2"
+            >
               <span>Proceed to Checkout</span>
               <ArrowRight size={20} />
             </button>
@@ -145,4 +150,4 @@ export const CartSidebar = ({
       </div>
     </>
   );
-};
+}
