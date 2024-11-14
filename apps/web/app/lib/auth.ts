@@ -75,4 +75,8 @@ export const authOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "../components/LoginPage",
+    signUp: "../components/SignupPage",
+  },
 };

@@ -21,6 +21,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "lucide-react": "^0.456.0"
+    "@reduxjs/toolkit": "^2.3.0",
+    "lucide-react": "^0.456.0",
+    "react-redux": "^9.1.2"
   }
 }

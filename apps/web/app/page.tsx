@@ -1,14 +1,19 @@
 "use client";
 
-import { CategoryBar } from "@repo/ui/categoryBar";
-import Navbar from "@repo/ui/navbar";
-import { ProductCard } from "@repo/ui/productCard";
-import Sidebar from "@repo/ui/sidebar";
-import React, { useState } from "react";
-import { CartSidebar } from "@repo/ui/cartSidebar";
+import React from "react";
+import { useApp } from "../context/AppContext";
+import Navbar from "../components/Navbar";
+import CartSidebar from "../components/CartSidebar";
+import CheckoutPage from "../components/CheckoutPage";
+import LoginPage from "../components/LoginPage";
+import SignupPage from "./signup/page";
+import { CategoryBar } from "../components/CategoryBar";
+import ProductCard from "../components/ProductCard";
+import Sidebar from "../components/Sidebar";
 
 const products = [
   {
+    id: 1,
     name: "Fresh Organic Bananas",
     price: 2.99,
     weight: "1 bunch (5-7 pieces)",
@@ -17,6 +22,7 @@ const products = [
     discount: 10,
   },
   {
+    id: 2,
     name: "Premium Whole Milk",
     price: 3.49,
     weight: "1 gallon",
@@ -24,6 +30,7 @@ const products = [
       "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
   },
   {
+    id: 3,
     name: "Fresh Avocados",
     price: 4.99,
     weight: "4 pieces",
@@ -32,6 +39,7 @@ const products = [
     discount: 15,
   },
   {
+    id: 4,
     name: "Organic Eggs",
     price: 5.99,
     weight: "12 count",
@@ -39,6 +47,7 @@ const products = [
       "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&q=80&w=800",
   },
   {
+    id: 5,
     name: "Fresh Strawberries",
     price: 3.99,
     weight: "1 lb",
@@ -47,6 +56,7 @@ const products = [
     discount: 20,
   },
   {
+    id: 6,
     name: "Whole Grain Bread",
     price: 2.99,
     weight: "1 loaf",
@@ -55,48 +65,32 @@ const products = [
   },
 ];
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  weight: string;
-}
-
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Fresh Organic Bananas",
-      price: 2.99,
-      quantity: 2,
-      image:
-        "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
-      weight: "1 bunch (5-7 pieces)",
-    },
-    {
-      id: 2,
-      name: "Premium Whole Milk",
-      price: 3.49,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
-      weight: "1 gallon",
-    },
-  ]);
+  const {
+    isLoggedIn,
+    cartItems,
+    updateCartItemQuantity,
+    addToCart,
+    isCartOpen,
+    setIsCartOpen,
+    isLoginOpen,
+    setIsLoginOpen,
+    isSignupOpen,
+    setIsSignupOpen,
+    isCheckoutOpen,
+    setIsCheckoutOpen,
+    isSidebarOpen,
+    setIsSidebarOpen,
+  } = useApp();
 
-  const updateCartItemQuantity = (id: number, quantity: number) => {
-    setCartItems((prevItems) => {
-      if (quantity === 0) {
-        return prevItems.filter((item) => item.id !== id);
-      }
-      return prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      );
-    });
+  const handleCheckout = () => {
+    if (!isLoggedIn) {
+      setIsCartOpen(false);
+      setIsLoginOpen(true);
+    } else {
+      setIsCartOpen(false);
+      setIsCheckoutOpen(true);
+    }
   };
 
   return (
@@ -104,13 +98,45 @@ function App() {
       <Navbar
         onMenuClick={() => setIsSidebarOpen(true)}
         onCartClick={() => setIsCartOpen(true)}
+        onLoginClick={() => setIsLoginOpen(true)}
+        isLoggedIn={isLoggedIn}
       />
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onLoginClick={() => {
+          setIsSidebarOpen(false);
+          setIsLoginOpen(true);
+        }}
+        isLoggedIn={isLoggedIn}
+      />
       <CartSidebar
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
         onUpdateQuantity={updateCartItemQuantity}
+        onCheckout={handleCheckout}
+      />
+      <CheckoutPage
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+      />
+      <LoginPage
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onSignupClick={() => {
+          setIsLoginOpen(false);
+          setIsSignupOpen(true);
+        }}
+      />
+      <SignupPage
+        isOpen={isSignupOpen}
+        onClose={() => setIsSignupOpen(false)}
+        onLoginClick={() => {
+          setIsSignupOpen(false);
+          setIsLoginOpen(true);
+        }}
       />
       <CategoryBar />
 
@@ -125,8 +151,12 @@ function App() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              {...product}
+              onAddToCart={() => addToCart(product)}
+            />
           ))}
         </div>
       </main>
